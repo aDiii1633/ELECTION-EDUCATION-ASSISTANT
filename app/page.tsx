@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import {
   MessageCircle, CheckCircle, Calendar, Map, BookOpen,
-  FileCheck, Bell, HelpCircle, BarChart3, Mic, Users,
+  FileCheck, HelpCircle, BarChart3, Users,
   ArrowRight, Shield, Zap, Globe
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
@@ -191,7 +191,7 @@ export default function HomePage() {
             transition={{ delay: 0.3 }}
             className="text-gray-400 text-lg max-w-2xl mx-auto mb-10"
           >
-            Your complete AI guide to India's democratic process — from registration to results.
+            Your complete AI guide to India&apos;s democratic process — from registration to results.
             Available in English and Hindi.
           </motion.p>
 
@@ -354,7 +354,7 @@ export default function HomePage() {
               <div className="text-5xl mb-4">🗳️</div>
               <h2 className="text-3xl font-bold mb-3">Your Vote. Your Voice.</h2>
               <p className="text-blue-200 text-lg mb-8 max-w-2xl mx-auto">
-                India's democracy depends on informed citizens like you. Start your election journey today.
+                India&apos;s democracy depends on informed citizens like you. Start your election journey today.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <Link

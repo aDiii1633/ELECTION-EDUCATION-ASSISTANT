@@ -3,12 +3,32 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Mic, MicOff, Volume2, VolumeX, Trash2, MessageCircle, X, Globe } from 'lucide-react';
+import { Send, Mic, MicOff, Volume2, VolumeX, Trash2, MessageCircle, X } from 'lucide-react';
 import { useStore } from '@/lib/store';
 import { sendChatMessage } from '@/lib/gemini';
 
 interface ChatWidgetProps {
   fullPage?: boolean;
+}
+
+interface SpeechRecognitionEvent {
+  results: { transcript: string }[][];
+}
+
+interface ISpeechRecognition {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onend: (() => void) | null;
+  onerror: (() => void) | null;
+}
+
+interface WindowWithSpeech extends Window {
+  SpeechRecognition?: new () => ISpeechRecognition;
+  webkitSpeechRecognition?: new () => ISpeechRecognition;
 }
 
 export default function ChatWidget({ fullPage = false }: ChatWidgetProps) {
@@ -20,7 +40,7 @@ export default function ChatWidget({ fullPage = false }: ChatWidgetProps) {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<ISpeechRecognition | null>(null);
 
   const { messages, addMessage, clearMessages, sessionId, language, setLanguage, trackQuestion } = useStore();
 
@@ -34,21 +54,24 @@ export default function ChatWidget({ fullPage = false }: ChatWidgetProps) {
 
   // Initialize Speech Recognition
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'SpeechRecognition' in window || 'webkitSpeechRecognition' in (window as any)) {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current!.continuous = false;
-      recognitionRef.current!.interimResults = false;
-      recognitionRef.current!.lang = language === 'hi' ? 'hi-IN' : 'en-IN';
+    const win = window as unknown as WindowWithSpeech;
+    if (typeof window !== 'undefined' && (win.SpeechRecognition || win.webkitSpeechRecognition)) {
+      const SpeechRecognition = win.SpeechRecognition || win.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = false;
+        recognitionRef.current.lang = language === 'hi' ? 'hi-IN' : 'en-IN';
 
-      recognitionRef.current!.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setInput(transcript);
-        setIsListening(false);
-      };
+        recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+          const transcript = event.results[0][0].transcript;
+          setInput(transcript);
+          setIsListening(false);
+        };
 
-      recognitionRef.current!.onend = () => setIsListening(false);
-      recognitionRef.current!.onerror = () => setIsListening(false);
+        recognitionRef.current.onend = () => setIsListening(false);
+        recognitionRef.current.onerror = () => setIsListening(false);
+      }
     }
   }, [language]);
 
@@ -63,14 +86,14 @@ export default function ChatWidget({ fullPage = false }: ChatWidgetProps) {
     }
   };
 
-  const speak = (text: string) => {
+  const speak = useCallback((text: string) => {
     if (!ttsEnabled || typeof window === 'undefined') return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = language === 'hi' ? 'hi-IN' : 'en-IN';
     utterance.rate = 0.9;
     window.speechSynthesis.speak(utterance);
-  };
+  }, [ttsEnabled, language]);
 
   const handleSend = useCallback(async () => {
     const text = input.trim();
@@ -95,7 +118,7 @@ export default function ChatWidget({ fullPage = false }: ChatWidgetProps) {
     } finally {
       setLoading(false);
     }
-  }, [input, loading, language, sessionId, addMessage, trackQuestion]);
+  }, [input, loading, language, sessionId, addMessage, trackQuestion, speak]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -126,6 +149,7 @@ export default function ChatWidget({ fullPage = false }: ChatWidgetProps) {
             onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
             className="p-1.5 hover:bg-white/20 rounded-lg transition-colors text-xs font-semibold"
             title="Switch language"
+            aria-label="Switch language"
           >
             {language === 'en' ? 'हिं' : 'EN'}
           </button>
@@ -133,6 +157,7 @@ export default function ChatWidget({ fullPage = false }: ChatWidgetProps) {
             onClick={() => setTtsEnabled(!ttsEnabled)}
             className={`p-1.5 rounded-lg transition-colors ${ttsEnabled ? 'bg-white/30' : 'hover:bg-white/20'}`}
             title="Toggle text-to-speech"
+            aria-label="Toggle text-to-speech"
           >
             {ttsEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
           </button>
@@ -140,11 +165,12 @@ export default function ChatWidget({ fullPage = false }: ChatWidgetProps) {
             onClick={clearMessages}
             className="p-1.5 hover:bg-white/20 rounded-lg transition-colors"
             title="Clear chat"
+            aria-label="Clear chat messages"
           >
             <Trash2 size={15} />
           </button>
           {!fullPage && (
-            <button onClick={() => setOpen(false)} className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+            <button onClick={() => setOpen(false)} className="p-1.5 hover:bg-white/20 rounded-lg transition-colors" aria-label="Close chat">
               <X size={15} />
             </button>
           )}

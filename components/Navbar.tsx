@@ -4,7 +4,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useStore } from '@/lib/store';
-import { Bell, Menu, X, Globe, Moon, Sun, ChevronDown, Type } from 'lucide-react';
+import { messaging } from '@/lib/firebase';
+import { getToken } from 'firebase/messaging';
+import { Bell, Menu, X, Globe, Type } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -23,7 +25,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
 
-  const { language, setLanguage, notifications, markNotificationRead, largeText, toggleLargeText, highContrast, toggleHighContrast } = useStore();
+  const { language, setLanguage, notifications, markNotificationRead, largeText, toggleLargeText } = useStore();
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -31,6 +33,24 @@ export default function Navbar() {
     const handler = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handler);
     return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  useEffect(() => {
+    // Request FCM permission on mount if supported
+    const requestPermission = async () => {
+      try {
+        if (!messaging) return;
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          await getToken(messaging, {
+            vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY || 'demo-vapid-key',
+          });
+        }
+      } catch (err) {
+        console.log('Notification permission denied or not supported');
+      }
+    };
+    requestPermission();
   }, []);
 
   return (

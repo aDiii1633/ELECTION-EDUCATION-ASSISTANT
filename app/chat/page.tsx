@@ -2,7 +2,7 @@
 'use client';
 
 import ChatWidget from '@/components/ChatWidget';
-import { MessageCircle, Zap, Globe, Volume2, Shield } from 'lucide-react';
+import { Zap, Globe, Volume2, Shield } from 'lucide-react';
 
 export default function ChatPage() {
   return (

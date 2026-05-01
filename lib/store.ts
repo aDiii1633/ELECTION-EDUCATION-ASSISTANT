@@ -65,7 +65,7 @@ interface AppStore {
 // ── Store implementation ──────────────────────────────────────────────────────
 export const useStore = create<AppStore>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       // User
       user: null,
       setUser: (user) => set({ user }),

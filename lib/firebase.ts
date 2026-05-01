@@ -5,6 +5,7 @@ import { getAuth, Auth } from 'firebase/auth';
 import { getFirestore, Firestore } from 'firebase/firestore';
 import { getStorage, FirebaseStorage } from 'firebase/storage';
 import { getAnalytics, Analytics, isSupported } from 'firebase/analytics';
+import { getMessaging, Messaging, isSupported as isMessagingSupported } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -25,10 +26,16 @@ export const storage: FirebaseStorage = getStorage(app);
 
 // Analytics only available client-side
 export let analytics: Analytics | null = null;
+export let messaging: Messaging | null = null;
 if (typeof window !== 'undefined') {
   isSupported().then((supported) => {
     if (supported) {
       analytics = getAnalytics(app);
+    }
+  });
+  isMessagingSupported().then((supported) => {
+    if (supported) {
+      messaging = getMessaging(app);
     }
   });
 }

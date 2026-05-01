@@ -69,7 +69,7 @@ export default function DocumentsPage() {
         </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Document Verification Helper</h1>
         <p className="text-gray-500">
-          Select the documents you have and our AI will check if they're sufficient for voter registration.
+          Select the documents you have and our AI will check if they&apos;re sufficient for voter registration.
         </p>
       </div>
 

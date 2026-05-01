@@ -165,9 +165,9 @@ export default function GuidePage() {
             aria-live="polite"
           >
             <div className="text-5xl mb-3">🎉</div>
-            <h3 className="text-xl font-bold text-green-700 mb-2">You're ready to vote!</h3>
+            <h3 className="text-xl font-bold text-green-700 mb-2">You&apos;re ready to vote!</h3>
             <p className="text-green-600 text-sm mb-4">
-              You've completed all steps of the voting guide. Now visit your polling booth on election day!
+              You&apos;ve completed all steps of the voting guide. Now visit your polling booth on election day!
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <a

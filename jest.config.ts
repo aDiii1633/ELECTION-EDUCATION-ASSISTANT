@@ -13,10 +13,8 @@ const config: Config = {
   },
   testMatch: ['**/__tests__/**/*.test.ts', '**/__tests__/**/*.test.tsx'],
   collectCoverageFrom: [
-    'lib/**/*.ts',
-    'app/**/*.tsx',
-    'components/**/*.tsx',
-    '!**/*.d.ts',
+    'lib/**/*.{js,jsx,ts,tsx}',
+    '!lib/**/*.d.ts',
     '!**/node_modules/**',
   ],
 };

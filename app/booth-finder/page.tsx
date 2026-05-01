@@ -1,9 +1,9 @@
 // app/booth-finder/page.tsx
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Map, Search, MapPin, Navigation, Phone, ExternalLink, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Map, Search, MapPin, Navigation, ExternalLink } from 'lucide-react';
 import { POLLING_CENTERS } from '@/lib/electionData';
 
 interface PollingCenter {
@@ -21,7 +21,6 @@ export default function BoothFinderPage() {
   const [results, setResults] = useState<PollingCenter[]>([]);
   const [selected, setSelected] = useState<PollingCenter | null>(null);
   const [searched, setSearched] = useState(false);
-  const mapRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -224,7 +223,7 @@ export default function BoothFinderPage() {
       <div className="mt-4 flex items-center justify-center gap-2 text-xs text-gray-500 bg-gray-50 py-2 px-4 rounded-lg inline-flex mx-auto border border-gray-100">
         <MapPin size={14} className="text-gray-400" />
         <span>
-          <strong>Map showing an error?</strong> Go to your Google Cloud Console and enable the "Maps Embed API" for your API Key.
+          <strong>Map showing an error?</strong> Go to your Google Cloud Console and enable the &quot;Maps Embed API&quot; for your API Key.
         </span>
       </div>
 

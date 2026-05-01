@@ -193,7 +193,7 @@ export default function FAQPage() {
       {/* Bottom CTA */}
       <div className="mt-10 bg-gradient-to-r from-pink-50 to-rose-50 rounded-2xl border border-pink-100 p-5 text-center">
         <p className="text-sm text-gray-700 mb-3">
-          Didn't find your answer? Ask our AI assistant directly!
+          Didn&apos;t find your answer? Ask our AI assistant directly!
         </p>
         <a
           href="/chat"

@@ -4,7 +4,7 @@
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
-  BarChart3, MessageSquare, Users, TrendingUp, Activity,
+  MessageSquare, Users, TrendingUp, Activity,
   Star, Clock, CheckCircle
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
@@ -160,6 +160,7 @@ export default function AdminPage() {
                   <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
                 ))}
               </Pie>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               <Tooltip formatter={(v: any) => `${v}%`} />
             </PieChart>
           </ResponsiveContainer>
