@@ -1,4 +1,8 @@
-// lib/electionData.ts
+import json
+
+# Generating the content for lib/electionData.ts
+
+data_ts = """// lib/electionData.ts
 // Static election knowledge base — timelines, FAQs, voting steps, documents
 
 export const ELECTION_TIMELINE = [
@@ -13,10 +17,10 @@ export const ELECTION_TIMELINE = [
 ];
 
 export const VOTING_STEPS = [
-  { step: 1, title: 'Register to Vote', description: 'Fill Form 6 online at voterportal.eci.gov.in or visit your local BLO.', details: ['Visit voterportal.eci.gov.in', 'Click "New Registration" → Fill Form 6', 'Upload documents: Photo, Age proof, Address proof', 'Submit and note your reference number', 'Track status online within 30 days'], icon: '📝', color: 'from-blue-500 to-blue-600', time: '10-15 mins', links: [{text: 'Voter Portal', url: 'https://voterportal.eci.gov.in'}, {text: 'Form 6 Guide', url: '/faq'}] },
-  { step: 2, title: 'Verify Your Voter ID', description: 'Ensure your Voter ID (EPIC) details are correct and up to date.', details: ['Check name spelling and address on EPIC card', 'Verify constituency details at electoralsearch.eci.gov.in', 'Update errors using Form 8', 'Download e-EPIC (digital voter ID) from NVSP portal', 'Keep original EPIC safe for election day'], icon: '✅', color: 'from-purple-500 to-purple-600', time: '5 mins', links: [{text: 'Electoral Search', url: 'https://electoralsearch.eci.gov.in'}] },
-  { step: 3, title: 'Find Your Polling Booth', description: 'Locate your designated polling station using your voter ID or address.', details: ['Visit electoralsearch.eci.gov.in', 'Enter your Voter ID number or name/address', 'Note your booth number and address', 'Plan your route in advance', 'Check booth timing (usually 7 AM – 6 PM)'], icon: '📍', color: 'from-green-500 to-green-600', time: '2 mins', links: [{text: 'Booth Finder', url: '/booth-finder'}] },
-  { step: 4, title: 'Cast Your Vote', description: 'Visit your polling booth on election day and exercise your franchise.', details: ['Arrive early to avoid queues', 'Carry your Voter ID (or accepted alternative ID)', 'Show ID to polling officer and get inked finger', 'Enter voting compartment — select candidate on EVM', 'Press VVPAT slot confirmation, exit quietly'], icon: '🗳️', color: 'from-orange-500 to-orange-600', time: '15-30 mins', links: [{text: 'Valid Documents', url: '/documents'}] },
+  { step: 1, title: 'Register to Vote', description: 'Fill Form 6 online at voterportal.eci.gov.in or visit your local BLO.', details: ['Visit voterportal.eci.gov.in', 'Click "New Registration" → Fill Form 6', 'Upload documents: Photo, Age proof, Address proof', 'Submit and note your reference number', 'Track status online within 30 days'], icon: '📝', color: 'from-blue-500 to-blue-600' },
+  { step: 2, title: 'Verify Your Voter ID', description: 'Ensure your Voter ID (EPIC) details are correct and up to date.', details: ['Check name spelling and address on EPIC card', 'Verify constituency details at electoralsearch.eci.gov.in', 'Update errors using Form 8', 'Download e-EPIC (digital voter ID) from NVSP portal', 'Keep original EPIC safe for election day'], icon: '✅', color: 'from-purple-500 to-purple-600' },
+  { step: 3, title: 'Find Your Polling Booth', description: 'Locate your designated polling station using your voter ID or address.', details: ['Visit electoralsearch.eci.gov.in', 'Enter your Voter ID number or name/address', 'Note your booth number and address', 'Plan your route in advance', 'Check booth timing (usually 7 AM – 6 PM)'], icon: '📍', color: 'from-green-500 to-green-600' },
+  { step: 4, title: 'Cast Your Vote', description: 'Visit your polling booth on election day and exercise your franchise.', details: ['Arrive early to avoid queues', 'Carry your Voter ID (or accepted alternative ID)', 'Show ID to polling officer and get inked finger', 'Enter voting compartment — select candidate on EVM', 'Press VVPAT slot confirmation, exit quietly'], icon: '🗳️', color: 'from-orange-500 to-orange-600' },
 ];
 
 export const FAQS = [
@@ -96,3 +100,7 @@ export const POLLING_CENTERS = [
   { id: 'pc24', name: 'Bhavans College, Andheri West', city: 'Mumbai', pincode: '400058', lat: 19.1243, lng: 72.8368, boothNo: 'B-902' },
   { id: 'pc25', name: 'National Public School, Indiranagar', city: 'Bengaluru', pincode: '560008', lat: 12.9698, lng: 77.6409, boothNo: 'B-903' },
 ];
+"""
+
+with open("d:\\prompt war 2nd round\\election-assistant\\lib\\electionData.ts", "w", encoding="utf-8") as f:
+    f.write(data_ts)

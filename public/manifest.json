@@ -1,0 +1,16 @@
+{
+  "name": "Election Process Education Assistant",
+  "short_name": "Election AI",
+  "description": "AI-powered guide to understanding India's election process.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}

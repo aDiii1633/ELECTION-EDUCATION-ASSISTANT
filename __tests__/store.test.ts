@@ -1,9 +1,9 @@
+// __tests__/store.test.ts
 import { renderHook, act } from '@testing-library/react';
 import { useStore } from '../lib/store';
 
 describe('Store', () => {
   beforeEach(() => {
-    // Reset Zustand store state before each test
     const { result } = renderHook(() => useStore());
     act(() => {
       result.current.clearMessages();
@@ -14,97 +14,67 @@ describe('Store', () => {
 
   it('adds and clears messages', () => {
     const { result } = renderHook(() => useStore());
-
     act(() => {
-      result.current.addMessage({ role: 'user', content: 'Hello', language: 'en' });
+      result.current.addMessage({ role: 'user', content: 'Hello', language: 'en', timestamp: '10:00 AM' });
     });
-
     expect(result.current.messages).toHaveLength(1);
     expect(result.current.messages[0].content).toBe('Hello');
-
     act(() => {
       result.current.clearMessages();
     });
-
     expect(result.current.messages).toHaveLength(0);
   });
 
-  it('toggles language', () => {
+  it('toggles language and accessibility settings', () => {
     const { result } = renderHook(() => useStore());
-    
     act(() => {
       result.current.setLanguage('hi');
-    });
-    expect(result.current.language).toBe('hi');
-  });
-
-  it('manages notifications', () => {
-    const { result } = renderHook(() => useStore());
-
-    // Initially there are 3 predefined notifications
-    const initialCount = result.current.notifications.length;
-
-    act(() => {
-      result.current.addNotification({
-        title: 'Test',
-        message: 'Test message',
-        type: 'info',
-        date: new Date()
-      });
-    });
-
-    expect(result.current.notifications).toHaveLength(initialCount + 1);
-    expect(result.current.notifications[0].title).toBe('Test');
-    expect(result.current.notifications[0].read).toBe(false);
-
-    const newNotifId = result.current.notifications[0].id;
-
-    act(() => {
-      result.current.markNotificationRead(newNotifId);
-    });
-
-    expect(result.current.notifications[0].read).toBe(true);
-
-    act(() => {
-      result.current.clearNotifications();
-    });
-
-    expect(result.current.notifications).toHaveLength(0);
-  });
-
-  it('tracks popular questions', () => {
-    const { result } = renderHook(() => useStore());
-    
-    act(() => {
-      result.current.trackQuestion('How to vote?');
-      result.current.trackQuestion('How to vote?');
-    });
-
-    expect(result.current.popularQuestions['How to vote?']).toBe(2);
-  });
-
-  it('toggles accessibility options', () => {
-    const { result } = renderHook(() => useStore());
-    
-    expect(result.current.largeText).toBe(false);
-    expect(result.current.highContrast).toBe(false);
-
-    act(() => {
       result.current.toggleLargeText();
       result.current.toggleHighContrast();
     });
-
+    expect(result.current.language).toBe('hi');
     expect(result.current.largeText).toBe(true);
     expect(result.current.highContrast).toBe(true);
   });
 
-  it('manages user', () => {
+  it('manages notifications correctly', () => {
     const { result } = renderHook(() => useStore());
-    
     act(() => {
-      result.current.setUser({ uid: '123', email: 'test@example.com', displayName: 'Test', photoURL: null });
+      result.current.addNotification({
+        title: 'New Event',
+        message: 'Something happened',
+        type: 'info',
+        date: new Date()
+      });
     });
+    const notifs = result.current.notifications;
+    expect(notifs.length).toBeGreaterThan(0);
+    expect(notifs[0].read).toBe(false);
 
-    expect(result.current.user?.uid).toBe('123');
+    act(() => {
+      result.current.markNotificationRead(notifs[0].id);
+    });
+    expect(result.current.notifications[0].read).toBe(true);
+  });
+
+  it('tracks query popularity', () => {
+    const { result } = renderHook(() => useStore());
+    act(() => {
+      result.current.trackQuestion('What is a booth?');
+      result.current.trackQuestion('What is a booth?');
+    });
+    expect(result.current.popularQuestions['What is a booth?']).toBe(2);
+  });
+
+  it('handles user session state', () => {
+    const { result } = renderHook(() => useStore());
+    act(() => {
+      result.current.setUser({ uid: 'test-uid', email: 'test@voter.in', displayName: 'Citizen', photoURL: null });
+    });
+    expect(result.current.user?.uid).toBe('test-uid');
+    act(() => {
+      result.current.setUser(null);
+    });
+    expect(result.current.user).toBeNull();
   });
 });

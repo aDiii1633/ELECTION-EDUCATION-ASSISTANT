@@ -6,11 +6,18 @@
   --primary: #2563eb;
   --primary-dark: #1d4ed8;
   --accent: #6366f1;
+  --card: #ffffff;
+  --border: #f1f5f9;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+  --base-font-size: 16px;
 }
 
 /* ── Base ─────────────────────────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
+  font-size: var(--base-font-size);
 }
 
 body {
@@ -18,6 +25,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ── Large Text Mode ─────────────────────────────────────────────────────── */
@@ -32,45 +40,64 @@ body.large-text li {
   font-size: 1.1em;
 }
 
-body.large-text h1 { font-size: 2.5rem; }
-body.large-text h2 { font-size: 2rem; }
-body.large-text h3 { font-size: 1.5rem; }
+body.large-text h1 { font-size: 2.75rem; }
+body.large-text h2 { font-size: 2.25rem; }
+body.large-text h3 { font-size: 1.75rem; }
 
 /* ── High Contrast Mode ──────────────────────────────────────────────────── */
 body.high-contrast {
   background: #000 !important;
   color: #fff !important;
+  --border: #fff;
+  --card: #000;
+}
+
+body.high-contrast * {
+  border-color: #fff !important;
 }
 
 body.high-contrast .bg-white,
 body.high-contrast .bg-gray-50,
-body.high-contrast .bg-blue-50 {
-  background: #111 !important;
-  border-color: #fff !important;
+body.high-contrast .bg-blue-50,
+body.high-contrast .bg-blue-600 {
+  background: #000 !important;
+  color: #fff !important;
 }
 
 body.high-contrast .text-gray-600,
 body.high-contrast .text-gray-500,
 body.high-contrast .text-gray-400 {
-  color: #ccc !important;
+  color: #fff !important;
 }
 
 body.high-contrast a,
-body.high-contrast .text-blue-600 {
-  color: #66aaff !important;
+body.high-contrast .text-blue-600,
+body.high-contrast .text-blue-700 {
+  color: #ffff00 !important; /* High vis yellow for links */
+  text-decoration: underline;
 }
 
-/* ── Custom scrollbar ────────────────────────────────────────────────────── */
+body.high-contrast button {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+/* ── Custom Scrollbar ────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
-::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-track { 
+  background: transparent; 
+}
 ::-webkit-scrollbar-thumb {
-  background: #c7d2fe;
-  border-radius: 10px;
+  background: #e2e8f0;
+  border-radius: 20px;
 }
-::-webkit-scrollbar-thumb:hover { background: #818cf8; }
+::-webkit-scrollbar-thumb:hover { 
+  background: #cbd5e1; 
+}
 
 /* ── Animations ──────────────────────────────────────────────────────────── */
 @keyframes gradient-x {
@@ -80,42 +107,86 @@ body.high-contrast .text-blue-600 {
 
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-8px); }
+  50% { transform: translateY(-10px); }
 }
 
-@keyframes pulse-ring {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); }
-  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(0.98); }
 }
 
 .animate-gradient-x {
   background-size: 200% 200%;
-  animation: gradient-x 4s ease infinite;
+  animation: gradient-x 6s ease infinite;
 }
 
-.animate-float { animation: float 3s ease-in-out infinite; }
-.animate-pulse-ring { animation: pulse-ring 2s infinite; }
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+.animate-pulse-soft { animation: pulse-soft 3s infinite ease-in-out; }
 
-/* ── UI Utilities ──────────────────────────────────────────────────────────── */
+/* ── UI Components ───────────────────────────────────────────────────────── */
 @layer utilities {
   .card-backlit {
-    @apply bg-white rounded-2xl border border-gray-100 shadow-[0_4px_20px_-4px_rgba(37,99,235,0.05)] transition-all duration-300 ease-in-out;
+    @apply bg-white rounded-3xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)];
   }
   .card-backlit:hover {
-    @apply shadow-[0_20px_40px_-12px_rgba(37,99,235,0.25)] -translate-y-1.5 border-blue-100;
+    @apply shadow-[0_30px_60px_rgba(37,99,235,0.12)] -translate-y-2 border-blue-100 scale-[1.01];
   }
+  
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-xl;
+  }
+  
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-extrabold px-6 py-3.5 rounded-2xl shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ── Skeletons ───────────────────────────────────────────────────────────── */
+.skeleton {
+  @apply animate-shimmer rounded-xl;
 }
 
 /* ── Focus visible ───────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+  border-radius: 8px;
 }
+
+/* ── Accessibility Link ─────────────────────────────────────────────────── */
+.skip-link {
+  @apply fixed top-[-100px] left-4 bg-blue-600 text-white px-6 py-3 rounded-2xl font-extrabold z-[9999] transition-all;
+}
+.skip-link:focus {
+  @apply top-4 shadow-2xl;
+}
+
+/* ── Multi-line Clamp ────────────────────────────────────────────────────── */
+.line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 
 /* ── Print ───────────────────────────────────────────────────────────────── */
 @media print {
-  nav, .no-print { display: none !important; }
-  body { background: white !important; }
+  nav, footer, .no-print, button { display: none !important; }
+  body { background: white !important; font-size: 12pt; }
+  .card-backlit { border: 1pt solid #ddd !important; box-shadow: none !important; }
 }

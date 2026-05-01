@@ -3,10 +3,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useStore } from '@/lib/store';
 import { messaging } from '@/lib/firebase';
 import { getToken } from 'firebase/messaging';
-import { Bell, Menu, X, Globe, Type } from 'lucide-react';
+import { Bell, Menu, X, Globe, Type, Settings, ChevronRight, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navLinks = [
@@ -24,8 +25,9 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const pathname = usePathname();
 
-  const { language, setLanguage, notifications, markNotificationRead, largeText, toggleLargeText } = useStore();
+  const { language, setLanguage, notifications, markNotificationRead, largeText, toggleLargeText, user } = useStore();
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -36,7 +38,6 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    // Request FCM permission on mount if supported
     const requestPermission = async () => {
       try {
         if (!messaging) return;
@@ -57,70 +58,77 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-blue-100'
-          : 'bg-white/80 backdrop-blur-sm'
+          ? 'bg-white/90 backdrop-blur-xl shadow-lg border-b border-blue-50 py-1'
+          : 'bg-white/70 backdrop-blur-md py-3'
       }`}
       role="navigation"
       aria-label="Main navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-md group-hover:shadow-blue-300 transition-shadow">
-              <span className="text-white text-lg font-bold">🗳️</span>
+          <Link href="/" className="flex items-center gap-3 group shrink-0">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform">
+              <span className="text-white text-xl font-bold">🗳️</span>
             </div>
-            <span className="hidden sm:block font-bold text-gray-900 text-sm leading-tight">
-              Election<br />
-              <span className="text-blue-600 font-semibold text-xs">Education Assistant</span>
-            </span>
+            <div className="hidden md:block">
+              <p className="font-extrabold text-gray-900 text-sm leading-tight tracking-tight uppercase">Election Assistant</p>
+              <p className="text-blue-600 font-bold text-[10px] uppercase tracking-[0.2em] opacity-80">India 2024</p>
+            </div>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-150"
-              >
-                {language === 'hi' ? link.labelHi : link.label}
-              </Link>
-            ))}
+          <div className="hidden xl:flex items-center gap-1">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`px-4 py-2 text-sm font-bold rounded-xl transition-all duration-200 ${
+                    isActive
+                      ? 'text-blue-700 bg-blue-50 shadow-sm'
+                      : 'text-gray-500 hover:text-blue-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {language === 'hi' ? link.labelHi : link.label}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Controls */}
-          <div className="flex items-center gap-2">
-            {/* Accessibility */}
-            <button
-              onClick={toggleLargeText}
-              className={`p-2 rounded-lg transition-colors text-gray-500 hover:text-blue-600 hover:bg-blue-50 ${largeText ? 'bg-blue-100 text-blue-600' : ''}`}
-              aria-label="Toggle large text"
-              title="Toggle large text"
-            >
-              <Type size={16} />
-            </button>
-
-            {/* Language Toggle */}
-            <button
-              onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-              className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold rounded-lg border border-blue-200 text-blue-600 hover:bg-blue-50 transition-colors"
-              aria-label="Switch language"
-            >
-              <Globe size={14} />
-              {language === 'en' ? 'हिं' : 'EN'}
-            </button>
+          <div className="flex items-center gap-1.5 sm:gap-3">
+            {/* Accessibility & Language (Compact on small screens) */}
+            <div className="hidden sm:flex items-center gap-1.5 bg-gray-100/50 p-1 rounded-2xl">
+              <button
+                onClick={toggleLargeText}
+                className={`p-2 rounded-xl transition-all ${largeText ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
+                aria-label="Toggle large text"
+                title="Large Text"
+              >
+                <Type size={18} />
+              </button>
+              <button
+                onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
+                className="flex items-center gap-1 px-3 py-1.5 text-xs font-extrabold rounded-xl text-blue-700 hover:bg-white hover:shadow-sm transition-all"
+                aria-label="Switch language"
+              >
+                <Globe size={14} />
+                {language === 'en' ? 'HI' : 'EN'}
+              </button>
+            </div>
 
             {/* Notifications */}
             <div className="relative">
               <button
                 onClick={() => setNotifOpen(!notifOpen)}
-                className="relative p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                className={`relative p-2.5 rounded-2xl transition-all ${notifOpen ? 'bg-blue-600 text-white shadow-lg' : 'text-gray-500 hover:bg-gray-100'}`}
                 aria-label={`Notifications (${unreadCount} unread)`}
               >
-                <Bell size={18} />
+                <Bell size={20} />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+                  <span className="absolute top-1.5 right-1.5 w-4.5 h-4.5 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold border-2 border-white">
                     {unreadCount}
                   </span>
                 )}
@@ -128,57 +136,77 @@ export default function Navbar() {
 
               <AnimatePresence>
                 {notifOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
-                    role="dialog"
-                    aria-label="Notifications panel"
-                  >
-                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                      <h3 className="font-semibold text-gray-800 text-sm">Notifications</h3>
-                      <span className="text-xs text-gray-400">{unreadCount} new</span>
-                    </div>
-                    <div className="max-h-64 overflow-y-auto">
-                      {notifications.length === 0 ? (
-                        <p className="text-center py-6 text-gray-400 text-sm">No notifications</p>
-                      ) : (
-                        notifications.slice(0, 5).map((n) => (
-                          <button
-                            key={n.id}
-                            onClick={() => markNotificationRead(n.id)}
-                            className={`w-full text-left px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors ${
-                              !n.read ? 'bg-blue-50/50' : ''
-                            }`}
-                          >
-                            <div className="flex items-start gap-2">
-                              <span className="text-base mt-0.5">
-                                {n.type === 'deadline' ? '⏰' : n.type === 'reminder' ? '🔔' : 'ℹ️'}
-                              </span>
-                              <div>
-                                <p className="text-xs font-semibold text-gray-800">{n.title}</p>
-                                <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.message}</p>
-                              </div>
-                              {!n.read && (
-                                <span className="ml-auto w-2 h-2 rounded-full bg-blue-500 mt-1 shrink-0" />
-                              )}
+                  <>
+                    <div className="fixed inset-0 z-[-1]" onClick={() => setNotifOpen(false)} />
+                    <motion.div
+                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute right-0 mt-3 w-80 bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden z-50"
+                      role="dialog"
+                    >
+                      <div className="px-5 py-4 border-b border-gray-50 flex items-center justify-between bg-gray-50/50">
+                        <h3 className="font-bold text-gray-900 text-sm">Notifications</h3>
+                        <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg uppercase tracking-wider">{unreadCount} new</span>
+                      </div>
+                      <div className="max-h-[24rem] overflow-y-auto p-2 scrollbar-hide">
+                        {notifications.length === 0 ? (
+                          <div className="py-12 text-center">
+                            <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                              <Bell size={20} className="text-gray-300" />
                             </div>
-                          </button>
-                        ))
-                      )}
-                    </div>
-                  </motion.div>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Inbox Empty</p>
+                          </div>
+                        ) : (
+                          notifications.slice(0, 8).map((n) => (
+                            <button
+                              key={n.id}
+                              onClick={() => { markNotificationRead(n.id); setNotifOpen(false); }}
+                              className={`w-full text-left p-4 mb-1 rounded-2xl transition-all ${
+                                !n.read ? 'bg-blue-50/50 border border-blue-100 shadow-sm' : 'hover:bg-gray-50 opacity-70'
+                              }`}
+                            >
+                              <div className="flex items-start gap-3">
+                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                                  n.type === 'deadline' ? 'bg-orange-100 text-orange-600' : 'bg-blue-100 text-blue-600'
+                                }`}>
+                                  <span className="text-lg">{n.type === 'deadline' ? '⏰' : '🔔'}</span>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-bold text-gray-900 line-clamp-1">{n.title}</p>
+                                  <p className="text-[11px] text-gray-500 mt-1 line-clamp-2 leading-relaxed">{n.message}</p>
+                                </div>
+                                {!n.read && (
+                                  <div className="w-2 h-2 rounded-full bg-blue-600 mt-1 shrink-0 animate-pulse" />
+                                )}
+                              </div>
+                            </button>
+                          ))
+                        )}
+                      </div>
+                      <Link href="/notifications" className="block text-center py-3 text-[10px] font-bold text-gray-400 uppercase tracking-[0.2em] border-t border-gray-50 hover:bg-gray-50 transition-colors">View All Activities</Link>
+                    </motion.div>
+                  </>
                 )}
               </AnimatePresence>
             </div>
 
+            {/* Profile/Auth Placeholder */}
+            <div className="hidden sm:block">
+              <div className="w-10 h-10 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-colors cursor-pointer border-2 border-white shadow-sm">
+                {user ? (
+                  <img src={user.photoURL || ''} alt="" className="w-full h-full rounded-2xl object-cover" />
+                ) : (
+                  <User size={18} />
+                )}
+              </div>
+            </div>
+
             {/* Mobile Menu Toggle */}
             <button
-              className="lg:hidden p-2 text-gray-500 hover:bg-blue-50 rounded-lg transition-colors"
+              className="xl:hidden p-2.5 bg-gray-100 text-gray-600 rounded-2xl hover:bg-blue-50 hover:text-blue-600 transition-all"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -186,28 +214,91 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Nav */}
+      {/* Mobile Nav Drawer */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden overflow-hidden bg-white border-t border-gray-100"
-          >
-            <div className="px-4 py-3 space-y-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block px-3 py-2.5 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                >
-                  {language === 'hi' ? link.labelHi : link.label}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[-1] xl:hidden"
+              onClick={() => setMobileOpen(false)}
+            />
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-white shadow-2xl z-[60] xl:hidden overflow-y-auto"
+            >
+              <div className="p-6 h-full flex flex-col">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white">🗳️</div>
+                    <span className="font-extrabold text-gray-900 tracking-tight">ELECTION ASSISTANT</span>
+                  </div>
+                  <button onClick={() => setMobileOpen(false)} className="p-2 rounded-xl bg-gray-100 text-gray-500">
+                    <X size={20} />
+                  </button>
+                </div>
+
+                <div className="space-y-1 mb-8">
+                  {navLinks.map((link) => {
+                    const isActive = pathname === link.href;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={`flex items-center justify-between px-5 py-4 rounded-2xl text-base font-bold transition-all ${
+                          isActive
+                            ? 'bg-blue-50 text-blue-700 shadow-sm border border-blue-100'
+                            : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        {language === 'hi' ? link.labelHi : link.label}
+                        <ChevronRight size={18} className={isActive ? 'text-blue-500' : 'text-gray-300'} />
+                      </Link>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-auto space-y-4">
+                  <div className="p-5 bg-gray-50 rounded-3xl border border-gray-100">
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Settings</p>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <Type size={18} className="text-gray-400" />
+                        <span className="text-sm font-bold text-gray-700">Large Text</span>
+                      </div>
+                      <button 
+                        onClick={toggleLargeText}
+                        className={`w-11 h-6 rounded-full transition-colors relative ${largeText ? 'bg-blue-600' : 'bg-gray-300'}`}
+                      >
+                        <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${largeText ? 'left-6' : 'left-1'}`} />
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Globe size={18} className="text-gray-400" />
+                        <span className="text-sm font-bold text-gray-700">Language</span>
+                      </div>
+                      <button 
+                        onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
+                        className="px-4 py-1.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-blue-600 shadow-sm"
+                      >
+                        {language === 'en' ? 'English' : 'हिंदी'}
+                      </button>
+                    </div>
+                  </div>
+                  <button className="w-full flex items-center justify-center gap-3 p-4 bg-gray-900 text-white rounded-3xl font-bold shadow-xl shadow-gray-200">
+                    <User size={18} /> Account Login
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>

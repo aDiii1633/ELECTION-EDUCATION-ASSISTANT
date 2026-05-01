@@ -7,7 +7,7 @@ import { motion } from 'framer-motion';
 import {
   MessageCircle, CheckCircle, Calendar, Map, BookOpen,
   FileCheck, HelpCircle, BarChart3, Users,
-  ArrowRight, Shield, Zap, Globe
+  ArrowRight, Shield, Zap, Globe, Sparkles, Quote
 } from 'lucide-react';
 import { useStore } from '@/lib/store';
 
@@ -114,8 +114,10 @@ const WORDS = ['समझें।', 'Register.', 'जानें।', 'Partici
 export default function HomePage() {
   const [wordIndex, setWordIndex] = useState(0);
   const { language } = useStore();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const interval = setInterval(() => {
       setWordIndex((prev) => (prev + 1) % WORDS.length);
     }, 2500);
@@ -123,10 +125,10 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-hidden bg-white">
       {/* ── Hero ── */}
       <section className="relative min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-900 overflow-hidden">
-        {/* Background decoration */}
+        {/* Background decoration & Particles */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden>
           <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
           <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-indigo-500/20 rounded-full blur-3xl" />
@@ -139,9 +141,30 @@ export default function HomePage() {
               backgroundSize: '40px 40px',
             }}
           />
+          {/* Floating particles */}
+          {mounted && [...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1.5 h-1.5 bg-blue-400/40 rounded-full"
+              initial={{ 
+                x: Math.random() * window.innerWidth, 
+                y: Math.random() * window.innerHeight,
+              }}
+              animate={{
+                y: [null, Math.random() * -200 - 100],
+                opacity: [0, 1, 0]
+              }}
+              transition={{
+                duration: Math.random() * 5 + 5,
+                repeat: Infinity,
+                ease: "linear",
+                delay: Math.random() * 5
+              }}
+            />
+          ))}
         </div>
 
-        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
+        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center mt-12 sm:mt-0">
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -179,7 +202,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="text-blue-400 font-semibold"
+              className="text-blue-400 font-semibold inline-block"
             >
               {WORDS[wordIndex]}
             </motion.span>
@@ -204,8 +227,9 @@ export default function HomePage() {
           >
             <Link
               href="/chat"
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3.5 rounded-xl transition-all hover:shadow-lg hover:shadow-blue-500/30 group"
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-3.5 rounded-xl transition-all hover:shadow-lg hover:shadow-blue-500/30 group relative overflow-hidden"
             >
+              <div className="absolute inset-0 w-full h-full bg-white/20 -translate-x-full group-hover:animate-shimmer" />
               <MessageCircle size={18} />
               Talk to AI Assistant
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -236,10 +260,10 @@ export default function HomePage() {
             {stats.map((stat, i) => (
               <div
                 key={i}
-                className="bg-white/5 border border-white/10 rounded-2xl px-4 py-4 backdrop-blur-sm"
+                className="bg-white/5 border border-white/10 rounded-2xl px-4 py-4 backdrop-blur-sm transform hover:-translate-y-1 transition-transform"
               >
                 <div className="text-2xl mb-1">{stat.icon}</div>
-                <div className="text-xl font-bold text-white">{stat.value}</div>
+                <div className="text-xl font-bold text-white tracking-wide">{stat.value}</div>
                 <div className="text-xs text-gray-400">{stat.label}</div>
               </div>
             ))}
@@ -257,20 +281,81 @@ export default function HomePage() {
       </section>
 
       {/* ── Trust badges ── */}
-      <section className="py-8 bg-white border-b border-gray-100">
+      <section className="py-8 bg-gray-50 border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4">
-          <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10 text-sm text-gray-400">
+          <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-10 text-sm text-gray-500">
             {[
               { icon: Shield, text: 'Secure & Private' },
               { icon: Zap, text: 'Real-time AI Responses' },
               { icon: Globe, text: 'English + Hindi' },
               { icon: Users, text: 'Accessible for All' },
             ].map(({ icon: Icon, text }) => (
-              <div key={text} className="flex items-center gap-2">
+              <div key={text} className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-100">
                 <Icon size={16} className="text-blue-500" />
-                <span className="font-medium text-gray-600">{text}</span>
+                <span className="font-medium text-gray-700">{text}</span>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── How It Works ── */}
+      <section className="py-20 px-4 bg-white" aria-labelledby="how-it-works">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-sm font-semibold rounded-full mb-4">
+              Simple Process
+            </span>
+            <h2 id="how-it-works" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
+              Three simple steps to become an empowered voter.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-gray-100" />
+            
+            {[
+              { step: '1', title: 'Check Eligibility', desc: 'Use our AI checker to confirm you are eligible and find out which documents you need.', icon: CheckCircle, color: 'text-green-500', bg: 'bg-green-100' },
+              { step: '2', title: 'Register & Find Booth', desc: 'Follow our guide to register on the Voter Portal and locate your exact polling station.', icon: Map, color: 'text-blue-500', bg: 'bg-blue-100' },
+              { step: '3', title: 'Cast Your Vote', desc: 'Visit your booth on Election Day with your Voter ID and exercise your democratic right.', icon: Sparkles, color: 'text-purple-500', bg: 'bg-purple-100' },
+            ].map((s, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2 }}
+                className="relative z-10 text-center bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className={`w-16 h-16 mx-auto ${s.bg} ${s.color} rounded-2xl flex items-center justify-center mb-6 transform -translate-y-12 shadow-lg`}>
+                  <s.icon size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2 -mt-6">{s.step}. {s.title}</h3>
+                <p className="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Testimonial / ECI Message ── */}
+      <section className="py-20 px-4 bg-blue-50">
+        <div className="max-w-4xl mx-auto text-center">
+          <Quote size={48} className="mx-auto text-blue-200 mb-6 rotate-180" />
+          <h2 className="text-2xl sm:text-3xl font-semibold text-gray-800 leading-relaxed mb-8">
+            "Voting is not just a right, it is a responsibility. Every vote counts in strengthening our vibrant democracy."
+          </h2>
+          <div className="flex items-center justify-center gap-4">
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-xl shadow-sm border border-blue-200">
+              🇮🇳
+            </div>
+            <div className="text-left">
+              <p className="font-bold text-gray-900">Election Commission of India</p>
+              <p className="text-sm text-gray-500">Official Guiding Principle</p>
+            </div>
           </div>
         </div>
       </section>
@@ -284,7 +369,7 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-sm font-semibold rounded-full mb-4">
+              <span className="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 text-sm font-semibold rounded-full mb-4">
                 All Features
               </span>
               <h2 id="features-heading" className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
@@ -309,10 +394,10 @@ export default function HomePage() {
                 >
                   <Link
                     href={feature.href}
-                    className="group block h-full p-6 card-backlit"
+                    className="group block h-full p-6 card-backlit bg-white hover:-translate-y-1 transition-all"
                     aria-label={`Go to ${feature.title}`}
                   >
-                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${feature.color} flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform`}>
                       <Icon size={20} className="text-white" />
                     </div>
                     <div className="flex items-center gap-2 mb-2">
@@ -344,7 +429,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 text-center text-white relative overflow-hidden"
+            className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 text-center text-white relative overflow-hidden shadow-2xl"
           >
             <div className="absolute inset-0 pointer-events-none" aria-hidden>
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
@@ -359,7 +444,7 @@ export default function HomePage() {
               <div className="flex flex-wrap justify-center gap-4">
                 <Link
                   href="/chat"
-                  className="bg-white text-blue-700 font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors flex items-center gap-2"
+                  className="bg-white text-blue-700 font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors flex items-center gap-2 shadow-lg"
                 >
                   <MessageCircle size={18} />
                   Ask AI Assistant
