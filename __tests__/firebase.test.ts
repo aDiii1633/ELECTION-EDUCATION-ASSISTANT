@@ -28,7 +28,7 @@ jest.mock('firebase/messaging', () => ({
 
 describe('Firebase initialization', () => {
   it('initializes app without crashing', async () => {
-    const app = await import('../lib/firebase');
+    const app = await import('@/services/firebase');
     expect(app.default).toBeDefined();
   });
 });

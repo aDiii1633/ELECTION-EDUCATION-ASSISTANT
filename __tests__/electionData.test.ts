@@ -10,7 +10,7 @@ import {
   VALID_DOCUMENTS,
   INDIAN_STATES,
   POLLING_CENTERS,
-} from '../lib/electionData';
+} from '@/core/data/election';
 
 describe('ELECTION_TIMELINE', () => {
   it('contains at least 5 events', () => {

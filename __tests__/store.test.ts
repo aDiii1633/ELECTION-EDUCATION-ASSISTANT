@@ -1,6 +1,19 @@
 // __tests__/store.test.ts
+
+// Mock Firebase to avoid Web API globals requirement in Node
+jest.mock('@/services/firebase', () => ({
+  auth: {},
+  analytics: null,
+  messaging: null,
+}));
+
+jest.mock('firebase/auth', () => ({
+  signOut: jest.fn(),
+  onAuthStateChanged: jest.fn(),
+}));
+
 import { renderHook, act } from '@testing-library/react';
-import { useStore } from '../lib/store';
+import { useStore } from '@/core/store';
 
 describe('Store', () => {
   beforeEach(() => {

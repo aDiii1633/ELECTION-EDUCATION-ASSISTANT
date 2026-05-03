@@ -1,0 +1,222 @@
+
+> election-assistant@0.1.0 lint
+> eslint
+
+
+D:\prompt war 2nd round\election-assistant\coverage\lcov-report\block-navigation.js
+  1:1  warning  Unused eslint-disable directive (no problems were reported)
+
+D:\prompt war 2nd round\election-assistant\src\app\(auth)\login\page.tsx
+   33:21  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+   54:21  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  133:14  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\prompt war 2nd round\election-assistant\src\app\(auth)\signup\page.tsx
+  36:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\prompt war 2nd round\election-assistant\src\app\admin\page.tsx
+  12:105  warning  'LineChart' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\prompt war 2nd round\election-assistant\src\app\api\auth\session\route.ts
+  33:12  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\prompt war 2nd round\election-assistant\src\app\booth-finder\page.tsx
+    4:20  warning  'useMemo' is defined but never used                              @typescript-eslint/no-unused-vars
+  107:8   warning  'error' is defined but never used                                @typescript-eslint/no-unused-vars
+  266:37  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  268:42  error    Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  381:57  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  381:72  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+D:\prompt war 2nd round\election-assistant\src\app\eligibility\page.tsx
+  5:18  warning  'AnimatePresence' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\prompt war 2nd round\election-assistant\src\app\faq\page.tsx
+   48:34   error    Error: Cannot access variable before it is declared
+
+`handleEnhance` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+D:\prompt war 2nd round\election-assistant\src\app\faq\page.tsx:48:34
+  46 |         const faq = filtered[focusedIndex];
+  47 |         setExpanded(expanded === faq.id ? null : faq.id);
+> 48 |         if (expanded !== faq.id) handleEnhance(faq);
+     |                                  ^^^^^^^^^^^^^ `handleEnhance` accessed before it is declared
+  49 |       }
+  50 |     };
+  51 |     window.addEventListener('keydown', handleKeyDown);
+
+D:\prompt war 2nd round\election-assistant\src\app\faq\page.tsx:55:3
+  53 |   }, [filtered, focusedIndex, expanded]);
+  54 |
+> 55 |   const handleEnhance = async (faq: (typeof FAQS)[0]) => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 56 |     if (enhanced[faq.id] || enhancing) return;
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 57 |     setEnhancing(faq.id);
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 65 |     }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 66 |   };
+     | ^^^^^ `handleEnhance` is declared here
+  67 |
+  68 |   const handleShare = (faq: (typeof FAQS)[0]) => {
+  69 |     const text = `Q: ${faq.question}\nA: ${faq.answer}`;  react-hooks/immutability
+   53:6    warning  React Hook useEffect has a missing dependency: 'handleEnhance'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/exhaustive-deps
+  139:69   error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+  139:95   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+  139:104  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react/no-unescaped-entities
+
+D:\prompt war 2nd round\election-assistant\src\app\guide\page.tsx
+   16:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\prompt war 2nd round\election-assistant\src\app\guide\page.tsx:16:5
+  14 |
+  15 |   useEffect(() => {
+> 16 |     setMounted(true);
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  17 |     const saved = localStorage.getItem('votingGuideProgress');
+  18 |     if (saved) {
+  19 |       try {  react-hooks/set-state-in-effect
+  244:76  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react/no-unescaped-entities
+  246:18  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     react/no-unescaped-entities
+
+D:\prompt war 2nd round\election-assistant\src\app\layout.tsx
+  5:8  warning  'dynamic' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\prompt war 2nd round\election-assistant\src\app\not-found.tsx
+  21:45  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  21:76  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\prompt war 2nd round\election-assistant\src\app\page.tsx
+  120:5    error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+D:\prompt war 2nd round\election-assistant\src\app\page.tsx:120:5
+  118 |
+  119 |   useEffect(() => {
+> 120 |     setMounted(true);
+      |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  121 |     const interval = setInterval(() => {
+  122 |       setWordIndex((prev) => (prev + 1) % WORDS.length);
+  123 |     }, 2500);  react-hooks/set-state-in-effect
+  150:20   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+D:\prompt war 2nd round\election-assistant\src\app\page.tsx:150:20
+  148 |               className="absolute w-1.5 h-1.5 bg-blue-400/40 rounded-full"
+  149 |               initial={{ 
+> 150 |                 x: Math.random() * window.innerWidth, 
+      |                    ^^^^^^^^^^^^^ Cannot call impure function
+  151 |                 y: Math.random() * window.innerHeight,
+  152 |               }}
+  153 |               animate={{                                                                                                                                                                                                                                                                                    react-hooks/purity
+  151:20   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+D:\prompt war 2nd round\election-assistant\src\app\page.tsx:151:20
+  149 |               initial={{ 
+  150 |                 x: Math.random() * window.innerWidth, 
+> 151 |                 y: Math.random() * window.innerHeight,
+      |                    ^^^^^^^^^^^^^ Cannot call impure function
+  152 |               }}
+  153 |               animate={{
+  154 |                 y: [null, Math.random() * -200 - 100],                                                                                                                                                                                                                                                                                                        react-hooks/purity
+  154:27   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+D:\prompt war 2nd round\election-assistant\src\app\page.tsx:154:27
+  152 |               }}
+  153 |               animate={{
+> 154 |                 y: [null, Math.random() * -200 - 100],
+      |                           ^^^^^^^^^^^^^ Cannot call impure function
+  155 |                 opacity: [0, 1, 0]
+  156 |               }}
+  157 |               transition={{                                                                                                                                                                                                                                                                                                                                                         react-hooks/purity
+  158:27   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+D:\prompt war 2nd round\election-assistant\src\app\page.tsx:158:27
+  156 |               }}
+  157 |               transition={{
+> 158 |                 duration: Math.random() * 5 + 5,
+      |                           ^^^^^^^^^^^^^ Cannot call impure function
+  159 |                 repeat: Infinity,
+  160 |                 ease: "linear",
+  161 |                 delay: Math.random() * 5                                                                                                                                                                                                                                                                                                                                 react-hooks/purity
+  161:24   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+D:\prompt war 2nd round\election-assistant\src\app\page.tsx:161:24
+  159 |                 repeat: Infinity,
+  160 |                 ease: "linear",
+> 161 |                 delay: Math.random() * 5
+      |                        ^^^^^^^^^^^^^ Cannot call impure function
+  162 |               }}
+  163 |             />
+  164 |           ))}                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/purity
+  349:13   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react/no-unescaped-entities
+  349:123  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react/no-unescaped-entities
+
+D:\prompt war 2nd round\election-assistant\src\app\timeline\page.tsx
+  84:48  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\prompt war 2nd round\election-assistant\src\components\ChatWidget.tsx
+   6:127  warning  'MicOff' is defined but never used                                                                                            @typescript-eslint/no-unused-vars
+  18:10   warning  'isSpeaking' is assigned a value but never used                                                                               @typescript-eslint/no-unused-vars
+  32:23   error    React Hook "useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render    react-hooks/rules-of-hooks
+  34:3    error    React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+  54:14   warning  'err' is defined but never used                                                                                               @typescript-eslint/no-unused-vars
+  80:5    error    Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free           @typescript-eslint/ban-ts-comment
+  89:36   error    Unexpected any. Specify a different type                                                                                      @typescript-eslint/no-explicit-any
+  98:28   error    React Hook "useMemo" is called conditionally. React Hooks must be called in the exact same order in every component render    react-hooks/rules-of-hooks
+
+D:\prompt war 2nd round\election-assistant\src\components\ErrorBoundary.tsx
+  40:54  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\prompt war 2nd round\election-assistant\src\components\Navbar.tsx
+   10:38  warning  'Settings' is defined but never used                                                                                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+   50:16  warning  'err' is defined but never used                                                                                                                                                                                                                                                          @typescript-eslint/no-unused-vars
+  211:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+D:\prompt war 2nd round\election-assistant\src\components\NotificationModal.tsx
+   5:50  warning  'CheckCircle' is defined but never used                          @typescript-eslint/no-unused-vars
+  54:70  error    `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+D:\prompt war 2nd round\election-assistant\src\core\store.ts
+  72:11  warning  'get' is defined but never used  @typescript-eslint/no-unused-vars
+
+D:\prompt war 2nd round\election-assistant\src\services\firebase-admin.ts
+  22:12  warning  'error' is defined but never used         @typescript-eslint/no-unused-vars
+  33:10  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\prompt war 2nd round\election-assistant\src\utils\logger.ts
+   6:56  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  25:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  26:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  27:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  28:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\prompt war 2nd round\election-assistant\src\utils\rate-limit.ts
+  1:23  warning  'NextResponse' is defined but never used  @typescript-eslint/no-unused-vars
+  3:13  error    A `require()` style import is forbidden   @typescript-eslint/no-require-imports
+
+✖ 58 problems (40 errors, 18 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+

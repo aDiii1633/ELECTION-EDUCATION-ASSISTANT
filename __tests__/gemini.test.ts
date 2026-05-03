@@ -55,7 +55,7 @@ jest.mock('@google/generative-ai', () => ({
 
 describe('checkEligibility', () => {
   it('returns eligible for valid Indian citizen aged 18+', async () => {
-    const { checkEligibility } = await import('../lib/gemini');
+    const { checkEligibility } = await import('@/services/ai');
     const result = await checkEligibility({
       age: 25,
       citizenship: 'Indian',
@@ -69,7 +69,7 @@ describe('checkEligibility', () => {
   });
 
   it('returns required properties shape', async () => {
-    const { checkEligibility } = await import('../lib/gemini');
+    const { checkEligibility } = await import('@/services/ai');
     const result = await checkEligibility({
       age: 16,
       citizenship: 'Indian',
@@ -83,27 +83,27 @@ describe('checkEligibility', () => {
 
 describe('sendChatMessage', () => {
   it('reuses chat session', async () => {
-    const { sendChatMessage } = await import('../lib/gemini');
+    const { sendChatMessage } = await import('@/services/ai');
     await sendChatMessage('test-session-reuse', 'Hello', 'en');
     const result = await sendChatMessage('test-session-reuse', 'Hello again', 'en');
     expect(result).toBeDefined();
   });
 
   it('returns a string response', async () => {
-    const { sendChatMessage } = await import('../lib/gemini');
+    const { sendChatMessage } = await import('@/services/ai');
     const result = await sendChatMessage('test-session-id', 'How do I register to vote?', 'en');
     expect(typeof result).toBe('string');
     expect(result.length).toBeGreaterThan(0);
   });
 
   it('handles Hindi language parameter', async () => {
-    const { sendChatMessage } = await import('../lib/gemini');
+    const { sendChatMessage } = await import('@/services/ai');
     const result = await sendChatMessage('test-session-hi', 'मतदान कैसे करें?', 'hi');
     expect(typeof result).toBe('string');
   });
 
   it('handles chat errors gracefully with fallback logic', async () => {
-    const { sendChatMessage } = await import('../lib/gemini');
+    const { sendChatMessage } = await import('@/services/ai');
     const result1 = await sendChatMessage('test-session-err1', 'ERROR register', 'en');
     expect(result1).toContain('voterportal.eci.gov.in');
 
@@ -123,7 +123,7 @@ describe('sendChatMessage', () => {
 
 describe('validateDocuments', () => {
   it('returns validation result', async () => {
-    const { validateDocuments } = await import('../lib/gemini');
+    const { validateDocuments } = await import('@/services/ai');
     const result = await validateDocuments(['Aadhaar Card']);
     expect(result.valid).toBe(true);
     expect(result.message).toBe('All good');
@@ -131,7 +131,7 @@ describe('validateDocuments', () => {
   });
 
   it('handles validation error fallback properly', async () => {
-    const { validateDocuments } = await import('../lib/gemini');
+    const { validateDocuments } = await import('@/services/ai');
     const result = await validateDocuments(['ERROR_DOC']);
     expect(result.valid).toBe(false);
     expect(result.message).toContain('Please provide at least 2');
@@ -145,13 +145,13 @@ describe('validateDocuments', () => {
 
 describe('enhanceFAQAnswer', () => {
   it('returns enhanced text', async () => {
-    const { enhanceFAQAnswer } = await import('../lib/gemini');
+    const { enhanceFAQAnswer } = await import('@/services/ai');
     const result = await enhanceFAQAnswer('enhance question', 'original answer');
     expect(result).toBe('Enhanced answer');
   });
 
   it('handles enhance error', async () => {
-    const { enhanceFAQAnswer } = await import('../lib/gemini');
+    const { enhanceFAQAnswer } = await import('@/services/ai');
     const result = await enhanceFAQAnswer('ERROR', 'original answer');
     expect(result).toBe('original answer');
   });
@@ -159,28 +159,28 @@ describe('enhanceFAQAnswer', () => {
 
 describe('checkEligibility Fallbacks', () => {
   it('handles under 18', async () => {
-    const { checkEligibility } = await import('../lib/gemini');
+    const { checkEligibility } = await import('@/services/ai');
     const result = await checkEligibility({ age: 16, citizenship: 'ERROR', state: 'Delhi', hasVoterId: false });
     expect(result.eligible).toBe(false);
     expect(result.reason).toContain('18 years old');
   });
 
   it('handles non-Indian', async () => {
-    const { checkEligibility } = await import('../lib/gemini');
+    const { checkEligibility } = await import('@/services/ai');
     const result = await checkEligibility({ age: 25, citizenship: 'US ERROR', state: 'Delhi', hasVoterId: false });
     expect(result.eligible).toBe(false);
     expect(result.reason).toContain('Only Indian citizens');
   });
 
   it('handles already registered', async () => {
-    const { checkEligibility } = await import('../lib/gemini');
+    const { checkEligibility } = await import('@/services/ai');
     const result = await checkEligibility({ age: 25, citizenship: 'Indian ERROR', state: 'Delhi', hasVoterId: true });
     expect(result.eligible).toBe(true);
     expect(result.reason).toContain('already registered');
   });
 
   it('handles full eligibility', async () => {
-    const { checkEligibility } = await import('../lib/gemini');
+    const { checkEligibility } = await import('@/services/ai');
     const result = await checkEligibility({ age: 25, citizenship: 'Indian ERROR', state: 'Delhi', hasVoterId: false });
     expect(result.eligible).toBe(true);
     expect(result.reason).toContain('eligible to register');
@@ -188,7 +188,7 @@ describe('checkEligibility Fallbacks', () => {
   });
 
   it('handles checkEligibility error', async () => {
-    const { checkEligibility } = await import('../lib/gemini');
+    const { checkEligibility } = await import('@/services/ai');
     const result = await checkEligibility({
       age: 25,
       citizenship: 'ERROR',
