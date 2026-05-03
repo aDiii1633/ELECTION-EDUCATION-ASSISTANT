@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin';
+import { logger } from '@/utils/logger';
 
 export function getAdminApp() {
   if (admin.apps.length > 0) return admin.apps[0];
@@ -20,7 +21,7 @@ export function getAdminApp() {
     // DO NOT initialize during build if keys are missing
     return null;
   } catch (error) {
-    console.error('Firebase Admin init error:', error);
+    logger.error('Firebase Admin init error', error);
     return null;
   }
 }

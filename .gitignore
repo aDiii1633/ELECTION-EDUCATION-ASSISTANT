@@ -44,3 +44,10 @@ firebase-debug.log
 
 # Test
 jest-coverage/
+
+# Lint output
+lint-output.txt
+lint_output.txt
+
+# Standalone build
+.next/standalone/

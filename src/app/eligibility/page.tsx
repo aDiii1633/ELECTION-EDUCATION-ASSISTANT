@@ -6,13 +6,8 @@ import { motion } from 'framer-motion';
 import { CheckCircle, XCircle, Loader2, ChevronRight, ChevronLeft, User, MapPin, CreditCard, Clock, Globe, Share2 } from 'lucide-react';
 import { checkEligibility } from '@/services/ai';
 import { INDIAN_STATES } from '@/core/data/election';
+import type { EligibilityResult } from '@/types';
 import toast from 'react-hot-toast';
-
-interface EligibilityResult {
-  eligible: boolean;
-  reason: string;
-  nextSteps: string[];
-}
 
 export default function EligibilityPage() {
   const [step, setStep] = useState(1);
@@ -85,7 +80,8 @@ export default function EligibilityPage() {
           url: window.location.href,
         });
       } catch (err) {
-        console.error('Share failed:', err);
+        // Share cancelled or failed — non-critical
+        void err;
       }
     } else {
       navigator.clipboard.writeText(text + " " + window.location.href);

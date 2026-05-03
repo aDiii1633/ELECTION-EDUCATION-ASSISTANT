@@ -1,23 +1,13 @@
 // app/booth-finder/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, Search, MapPin, Navigation, ExternalLink, LocateFixed, Loader2 } from 'lucide-react';
 import { POLLING_CENTERS } from '@/core/data/election';
+import type { PollingCenter } from '@/types';
 import toast from 'react-hot-toast';
 import BoothSkeleton from '@/components/BoothSkeleton';
-import { useEffect } from 'react';
-
-interface PollingCenter {
-  id: string;
-  name: string;
-  city: string;
-  pincode: string;
-  lat: number;
-  lng: number;
-  boothNo: string;
-}
 
 const CITIES = Array.from(new Set(POLLING_CENTERS.map(c => c.city))).sort();
 

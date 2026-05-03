@@ -4,6 +4,7 @@
 import React, { ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import Link from 'next/link';
+import { logger } from '@/utils/logger';
 
 interface Props {
   children?: ReactNode;
@@ -24,7 +25,7 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    logger.error('Uncaught error in ErrorBoundary', { error: error.message, stack: errorInfo.componentStack });
   }
 
   public render() {

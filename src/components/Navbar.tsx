@@ -10,6 +10,7 @@ import { messaging } from '@/services/firebase';
 import { getToken } from 'firebase/messaging';
 import { Bell, Menu, X, Globe, Type, ChevronRight, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { logger } from '@/utils/logger';
 
 const navLinks = [
   { href: '/', label: 'Home', labelHi: 'होम' },
@@ -49,7 +50,7 @@ export default function Navbar() {
           });
         }
       } catch {
-        console.log('Notification permission denied or not supported');
+        logger.info('Notification permission denied or not supported');
       }
     };
     requestPermission();
